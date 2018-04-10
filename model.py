@@ -2,12 +2,50 @@
 import csv
 
 BB_FILE_NAME = 'umbball.csv'
-
-bb_seasons = []
+FB_FILE_NAME = "umfootball.csv"
 
 def init_bball(csv_file_name=BB_FILE_NAME):
-    pass
+    global bb_seasons
+    with open(csv_file_name) as f:
+        reader = csv.reader(f)
+        next(reader) # throw away headers
+        next(reader) # throw away headers
+        global bb_seasons
+        bb_seasons = [] # reset, start clean
+        for r in reader:
+            r[3] = int(r[3])
+            r[4] = int(r[4])
+            r[5] = int(r[5])
+            bb_seasons.append(r)
+
+def init_football(csv_file_name=FB_FILE_NAME):
+	global fb_seasons
+	with open(csv_file_name) as f:
+		reader = csv.reader(f)
+		next(reader)
+		next(reader)
+		global fb_seasons
+		fb_seasons = []
+		for r in reader:
+			r[3] = int(r[3])
+            r[4] = int(r[4])
+            r[5] = int(r[5])
+            r[6] = int(r[6])
+            fb_seasons.append(r)
+
+
+init_bball()
 
 def get_bball_seasons(sortby='year', sortorder='desc'):
-    global bb_seasons
-    return bb_seasons
+	if sortby=='year':
+		sortcol = 1
+	elif sortby == 'wins':
+		sortcol =3
+	elif sortby == 'pct':
+		sortcol = 5
+	else:
+		sortcol = 0
+	rev = (sortorder == 'desc')
+	global bb_seasons
+	sorted_list = sorted(bb_seasons, key=lambda row: row[sortcol], reverse=rev)
+	return sorted_list
